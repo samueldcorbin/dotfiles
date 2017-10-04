@@ -21,6 +21,10 @@ fi
 echo "Updating dotfiles..."
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone "git@github.com:samueldcorbin/dotfiles.git" "$HOME/.dotfiles"
+    if [ -f "bootstrap.sh" ]; then
+        echo "Removing bootstrap.sh (tracked version in ~/.dotfiles/)."
+        rm bootstrap.sh
+    fi
 else
     git -C "$HOME/.dotfiles" pull
 fi
