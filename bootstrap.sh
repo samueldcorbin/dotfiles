@@ -4,7 +4,7 @@
 echo "Updating packages..."
 sudo apt-get -y update
 sudo apt-get -y upgrade
-sudo apt-get -y install zsh tmux vim git curl
+sudo apt-get -y install zsh tmux vim git wget
 sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 echo "...done."
@@ -39,9 +39,21 @@ if [ ! -h "$HOME/.vimrc" ]; then
 fi
 if [ ! -h "$HOME/.zshrc" ]; then
     echo "Symlinking zshrc to home."
-    ln -s "$HOME/.doftiles/zshrc" "$HOME/.zshrc"
+    ln -s "$HOME/.dotfiles/zshrc" "$HOME/.zshrc"
 fi
 echo "...done."
+
+echo "Adding Tomorrow-Night colorscheme."
+if [ ! -f "$HOME/.vim/colors/Tomorrow-Night.vim" ]; then
+    mkdir -p "$HOME/.vim/colors"
+    wget -O "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim"
+    ln -s "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "$HOME/.vim/colors/Tomorrow-Night.vim"
+fi
+if [ ! -f "$HOME/.dotfiles/downloads/setup-theme.sh" ]; then
+    wget -O "$HOME/.dotfiles/downloads/setup-theme.sh" "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/Gnome-Terminal/setup-theme.sh"
+    chmod +x "$HOME/.dotfiles/downloads/setup-theme.sh"
+    "$HOME/.dotfiles/downloads/setup-theme.sh"
+fi
 
 restart_confirmation () {
     local confirm
