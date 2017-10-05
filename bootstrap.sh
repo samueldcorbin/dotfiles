@@ -18,6 +18,13 @@ if [ ! "$(git config --global user.name)" = "samueldcorbin" ]; then
     git config --global user.name "samueldcorbin"
 fi
 
+if [ ! -f "$HOME/.ssh/id_rsa" ]; then
+    ssh-keygen -f "$HOME/.ssh/id_rsa"
+    echo "Public key:"
+    cat "$HOME/.ssh/id_rsa.pub"
+    read -p "Add key to GitHub, then press any key to continue."
+fi
+
 echo "Updating dotfiles..."
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone "git@github.com:samueldcorbin/dotfiles.git" "$HOME/.dotfiles"
