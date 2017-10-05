@@ -10,3 +10,6 @@ zstyle :compinstall filename '/Users/scorbin/.zshrc'
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
+
+# Use Base16 Shell colors
+. "$HOME/.dotfiles/downloads/base16-tomorrow-night.sh"

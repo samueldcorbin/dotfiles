@@ -2,6 +2,7 @@
 
 # Base16 Tomorrow Night - Gnome Terminal color scheme install script
 # Chris Kempson (http://chriskempson.com)
+# Modified by samueldcorbin
 
 [[ -z "$PROFILE_NAME" ]] && PROFILE_NAME="Base 16 Tomorrow Night 256"
 [[ -z "$PROFILE_SLUG" ]] && PROFILE_SLUG="base-16-tomorrow-night-256"
@@ -73,6 +74,7 @@ if which "$DCONF" > /dev/null 2>&1; then
         dset cursor-foreground-color "'#1d1f21'"
         dset use-theme-colors "false"
         dset use-theme-background "false"
+
         # Added by samueldcorbin
         dset use-theme-transparency "false"
         dset font "'Inconsolata-g 14'"
@@ -130,6 +132,7 @@ gset string cursor-background-color "'#c5c8c6'"
 gset string cursor-foreground-color "'#1d1f21'"
 gset bool   use_theme_colors "false"
 gset bool   use_theme_background "false"
+
 # Added by samueldcorbin
 gset bool   use_theme_transparency "false"
 gset string font "Inconsolata-g 14"

@@ -2,7 +2,8 @@ set nocompatible
 
 syntax enable
 
-colorscheme Tomorrow-Night
+let base16colorspace=256
+colorscheme base16-tomorrow-night
 
 set number
 

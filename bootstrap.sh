@@ -4,7 +4,7 @@
 echo "Updating packages..."
 sudo apt-get -y update
 sudo apt-get -y upgrade
-sudo apt-get -y install zsh tmux vim git wget unzip
+sudo apt-get -y install zsh tmux vim git unzip wget
 sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 echo "...done."
@@ -32,6 +32,7 @@ fi
 echo "Updating dotfiles..."
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone "git@github.com:samueldcorbin/dotfiles.git" "$HOME/.dotfiles"
+    # Remove loose bootstrap file
     if [ -f "bootstrap.sh" ]; then
         echo "Removing bootstrap.sh (tracked version in ~/.dotfiles/)."
         rm bootstrap.sh
@@ -56,32 +57,43 @@ echo "...done."
 
 if [ ! -h "$HOME/.fonts/Inconsolata-g.ttf" ]; then
     echo "Adding Inconsolata-g font."
-    if [ ! -f "$HOME/.dotfiles/downloads/inconsolata-g_font.zip" ]; then
-        wget -O "$HOME/.dotfiles/downloads/inconsolata-g_font.zip" "http://www.fantascienza.net/leonardo/ar/inconsolatag/inconsolata-g_font.zip"
-    fi
-    mkdir -p "$HOME/.fonts"
+    wget -O "$HOME/.dotfiles/downloads/inconsolata-g_font.zip" "http://www.fantascienza.net/leonardo/ar/inconsolatag/inconsolata-g_font.zip"
     unzip "$HOME/.dotfiles/downloads/inconsolata-g_font.zip" "Inconsolata-g.ttf" -d "$HOME/.dotfiles/downloads/"
+    rm "$HOME/.dotfiles/downloads/inconsolata-g_font.zip"
+    mkdir -p "$HOME/.fonts"
     ln -s "$HOME/.dotfiles/downloads/Inconsolata-g.ttf" "$HOME/.fonts/Inconsolata-g.ttf"
     echo "...done."
 fi
 
-if [ ! -f "$HOME/.vim/colors/Tomorrow-Night.vim" ]; then
-    echo "Adding Tomorrow-Night colorscheme."
+if [ ! -f "$HOME/.vim/colors/base16-tomorrow-night.vim" ]; then
+    echo "Adding base16-tomorrow-night colorscheme."
+    wget -O "$HOME/.dotfiles/downloads/base16-tomorrow-night.vim" "https://raw.githubusercontent.com/chriskempson/base16-vim/master/colors/base16-tomorrow-night.vim"
     mkdir -p "$HOME/.vim/colors"
-    wget -O "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim"
-    ln -s "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "$HOME/.vim/colors/Tomorrow-Night.vim"
+    ln -s "$HOME/.dotfiles/downloads/base16-tomorrow-night.vim" "$HOME/.vim/colors/base16-tomorrow-night.vim"
+    wget -O "$HOME/.dotfiles/downloads/base16-tomorrow-night.sh" "https://raw.githubusercontent.com/chriskempson/base16-shell/master/scripts/base16-tomorrow-night.sh"
     # No easy way to detect if theme is already installed, so just do it at the same time as vim
-    "$HOME/.dotfiles/gnome_terminal_theme.sh"
+    . "$HOME/.dotfiles/gnome_terminal_theme.sh"
     echo "...done."
+    echo "Restart terminal to fix colorscheme."
+fi
+
+if [ "$(gsettings get "org.gnome.desktop.screensaver" "lock-enabled")" = "true" ]; then
+    gsettings set "org.gnome.desktop.screensaver" "lock-enabled" "false"
+    echo "Disabled screen lock."
+fi
+
+if [ ! "$(gsettings get "org.gnome.desktop.session" "idle-delay")" = "uint32 900" ]; then
+    gsettings set "org.gnome.desktop.session" "idle-delay" "900"
+    echo "Set to turn screen off when inactive for 15 minutes."
 fi
 
 restart_confirmation () {
     local confirm
     read -p "Do you want to restart now? [y/n] " confirm
-    confirm=$(echo $confirm | cut -c 1)
-    if [ $confirm = "y" ]; then
+    confirm=$(echo "$confirm" | cut -c 1)
+    if [ "$confirm" = "y" ]; then
         shutdown -r now
-    elif [ $confirm = "n" ]; then
+    elif [ "$confirm" = "n" ]; then
         true
     else
         restart_confirmation
