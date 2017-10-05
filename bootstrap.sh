@@ -4,7 +4,7 @@
 echo "Updating packages..."
 sudo apt-get -y update
 sudo apt-get -y upgrade
-sudo apt-get -y install zsh tmux vim git wget
+sudo apt-get -y install zsh tmux vim git wget unzip
 sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 echo "...done."
@@ -43,16 +43,24 @@ if [ ! -h "$HOME/.zshrc" ]; then
 fi
 echo "...done."
 
+if [ ! -h "$HOME/.fonts/Inconsolata-g.ttf" ]; then
+    echo "Adding Inconsolata-g font."
+    if [ ! -f "$HOME/.dotfiles/downloads/inconsolata-g_font.zip" ]; then
+        wget -O "$HOME/.dotfiles/downloads/inconsolata-g_font.zip" "http://www.fantascienza.net/leonardo/ar/inconsolatag/inconsolata-g_font.zip"
+    fi
+    mkdir -p "$HOME/.fonts"
+    unzip "$HOME/.dotfiles/downloads/inconsolata-g_font.zip" "Inconsolata-g.ttf" -d "$HOME/.dotfiles/downloads/"
+    ln -s "$HOME/.dotfiles/downloads/Inconsolata-g.ttf" "$HOME/.fonts/Inconsolata-g.ttf"
+    echo "...done."
+fi
+
 echo "Adding Tomorrow-Night colorscheme."
 if [ ! -f "$HOME/.vim/colors/Tomorrow-Night.vim" ]; then
     mkdir -p "$HOME/.vim/colors"
     wget -O "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim"
     ln -s "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "$HOME/.vim/colors/Tomorrow-Night.vim"
-fi
-if [ ! -f "$HOME/.dotfiles/downloads/setup-theme.sh" ]; then
-    wget -O "$HOME/.dotfiles/downloads/setup-theme.sh" "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/Gnome-Terminal/setup-theme.sh"
-    chmod +x "$HOME/.dotfiles/downloads/setup-theme.sh"
-    "$HOME/.dotfiles/downloads/setup-theme.sh"
+    # No easy way to detect if theme is already installed, so just do it at the same time as vim
+    "$HOME/.dotfiles/setup-theme.sh"
 fi
 
 restart_confirmation () {
