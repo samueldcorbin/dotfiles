@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# Base16 - Gnome Terminal color scheme install script
 
-[[ -z "$PROFILE_NAME" ]] && PROFILE_NAME="Tomorrow"
-[[ -z "$PROFILE_SLUG" ]] && PROFILE_SLUG="Tomorrow"
+# Base16 Tomorrow Night - Gnome Terminal color scheme install script
+# Chris Kempson (http://chriskempson.com)
+
+[[ -z "$PROFILE_NAME" ]] && PROFILE_NAME="Base 16 Tomorrow Night 256"
+[[ -z "$PROFILE_SLUG" ]] && PROFILE_SLUG="base-16-tomorrow-night-256"
 [[ -z "$DCONF" ]] && DCONF=dconf
 [[ -z "$UUIDGEN" ]] && UUIDGEN=uuidgen
 
@@ -17,7 +19,7 @@ dset() {
     "$DCONF" write "$PROFILE_KEY/$key" "$val"
 }
 
-# because dconf still doesn't have "append"
+# Because dconf still doesn't have "append"
 dlist_append() {
     local key="$1"; shift
     local val="$1"; shift
@@ -34,6 +36,9 @@ dlist_append() {
 
 # Newest versions of gnome-terminal use dconf
 if which "$DCONF" > /dev/null 2>&1; then
+    # Check that uuidgen is available
+    type $UUIDGEN >/dev/null 2>&1 || { echo >&2 "Requires uuidgen but it's not installed.  Aborting!"; exit 1; }
+
     [[ -z "$BASE_KEY_NEW" ]] && BASE_KEY_NEW=/org/gnome/terminal/legacy/profiles:
 
     if [[ -n "`$DCONF list $BASE_KEY_NEW/`" ]]; then
@@ -50,21 +55,25 @@ if which "$DCONF" > /dev/null 2>&1; then
         DEFAULT_KEY="$BASE_KEY_NEW/:$DEFAULT_SLUG"
         PROFILE_KEY="$BASE_KEY_NEW/:$PROFILE_SLUG"
 
-        # copy existing settings from default profile
+        # Copy existing settings from default profile
         $DCONF dump "$DEFAULT_KEY/" | $DCONF load "$PROFILE_KEY/"
 
-        # add new copy to list of profiles
+        # Add new copy to list of profiles
         dlist_append $BASE_KEY_NEW/list "$PROFILE_SLUG"
 
-        # update profile values with theme options
+        # Update profile values with theme options
         dset visible-name "'$PROFILE_NAME'"
         dset palette "['#1d1f21', '#cc6666', '#b5bd68', '#f0c674', '#81a2be', '#b294bb', '#8abeb7', '#c5c8c6', '#969896', '#cc6666', '#b5bd68', '#f0c674', '#81a2be', '#b294bb', '#8abeb7', '#ffffff']"
         dset background-color "'#1d1f21'"
         dset foreground-color "'#c5c8c6'"
         dset bold-color "'#c5c8c6'"
         dset bold-color-same-as-fg "true"
+        dset cursor-colors-set "true"
+        dset cursor-background-color "'#c5c8c6'"
+        dset cursor-foreground-color "'#1d1f21'"
         dset use-theme-colors "false"
         dset use-theme-background "false"
+        # Added by samueldcorbin
         dset use-theme-transparency "false"
         dset font "'Inconsolata-g 14'"
         dset use-system-font "false"
@@ -116,8 +125,12 @@ gset string background_color "#1d1f21"
 gset string foreground_color "#c5c8c6"
 gset string bold_color "#c5c8c6"
 gset bool   bold_color_same_as_fg "true"
+gset bool   cursor-colors-set "true"
+gset string cursor-background-color "'#c5c8c6'"
+gset string cursor-foreground-color "'#1d1f21'"
 gset bool   use_theme_colors "false"
 gset bool   use_theme_background "false"
+# Added by samueldcorbin
 gset bool   use_theme_transparency "false"
 gset string font "Inconsolata-g 14"
 gset bool   use_system_font "false"
