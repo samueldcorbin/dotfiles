@@ -65,13 +65,14 @@ if [ ! -h "$HOME/.fonts/Inconsolata-g.ttf" ]; then
     echo "...done."
 fi
 
-echo "Adding Tomorrow-Night colorscheme."
 if [ ! -f "$HOME/.vim/colors/Tomorrow-Night.vim" ]; then
+    echo "Adding Tomorrow-Night colorscheme."
     mkdir -p "$HOME/.vim/colors"
     wget -O "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "https://raw.githubusercontent.com/chriskempson/tomorrow-theme/master/vim/colors/Tomorrow-Night.vim"
     ln -s "$HOME/.dotfiles/downloads/Tomorrow-Night.vim" "$HOME/.vim/colors/Tomorrow-Night.vim"
     # No easy way to detect if theme is already installed, so just do it at the same time as vim
     "$HOME/.dotfiles/setup-theme.sh"
+    echo "...done."
 fi
 
 restart_confirmation () {
