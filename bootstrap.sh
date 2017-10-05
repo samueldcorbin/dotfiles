@@ -19,10 +19,11 @@ if [ ! "$(git config --global user.name)" = "samueldcorbin" ]; then
 fi
 
 if [ ! -f "$HOME/.ssh/id_rsa" ]; then
+    echo "No default SSH key found, generating new default:"
     ssh-keygen -f "$HOME/.ssh/id_rsa"
     echo "Public key:"
     cat "$HOME/.ssh/id_rsa.pub"
-    read -p "Add key to GitHub, then press any key to continue."
+    read -p "Add key to GitHub/Bitbucket, then press any key to continue."
 fi
 
 echo "Updating dotfiles..."
