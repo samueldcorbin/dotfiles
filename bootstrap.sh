@@ -25,7 +25,8 @@ if [ ! -f "$HOME/.ssh/id_rsa" ]; then
     cat "$HOME/.ssh/id_rsa.pub"
     echo "GitHub: https://github.com/settings/keys"
     echo "Bitbucket: https://bitbucket.org/account/user/samueldcorbin/ssh-keys/"
-    read -p "Add key to GitHub/Bitbucket, then press any key to continue."
+    read -n 1 -p "Add key to GitHub/Bitbucket, then press any key to continue. "
+    echo ""
 fi
 
 echo "Updating dotfiles..."
