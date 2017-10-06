@@ -6,8 +6,7 @@ if [ "$(gsettings get "org.gnome.desktop.screensaver" "lock-enabled")" = "true" 
     gsettings set "org.gnome.desktop.screensaver" "lock-enabled" "false"
     echo "Disabled screen lock."
 fi
-
-if [ ! "$(gsettings get "org.gnome.desktop.session" "idle-delay")" = "uint32 900" ]; then
+if [ "$(gsettings get "org.gnome.desktop.session" "idle-delay")" != "uint32 900" ]; then
     gsettings set "org.gnome.desktop.session" "idle-delay" "900"
     echo "Set to turn screen off when inactive for 15 minutes."
 fi
@@ -19,15 +18,6 @@ sudo apt-get -y install zsh tmux vim git unzip wget
 sudo apt-get -y autoremove
 sudo apt-get -y autoclean
 echo "...done."
-
-if [ ! "$(git config --global user.email)" = "samueldcorbin@gmail.com" ]; then
-    echo "Set git global user.email to samueldcorbin@gmail.com"
-    git config --global user.email "samueldcorbin@gmail.com"
-fi
-if [ ! "$(git config --global user.name)" = "samueldcorbin" ]; then
-    echo "Set git global user.name to samueldcorbin"
-    git config --global user.name "samueldcorbin"
-fi
 
 if [ ! -f "$HOME/.ssh/id_rsa" ]; then
     echo "No default SSH key found, generating new default:"
@@ -52,18 +42,13 @@ else
     git -C "$HOME/.dotfiles" pull
 fi
 
-if [ ! -h "$HOME/.tmux.conf" ]; then
-    echo "Symlinking tmux.conf to home."
-    ln -s "$HOME/.dotfiles/tmux.conf" "$HOME/.tmux.conf"
-fi
-if [ ! -h "$HOME/.vimrc" ]; then
-    echo "Symlinking vimrc to home."
-    ln -s "$HOME/.dotfiles/vimrc" "$HOME/.vimrc"
-fi
-if [ ! -h "$HOME/.zshrc" ]; then
-    echo "Symlinking zshrc to home."
-    ln -s "$HOME/.dotfiles/zshrc" "$HOME/.zshrc"
-fi
+dotfiles="gitconfig tmux.conf vimrc zshrc"
+for file in $dotfiles; do
+    if [ ! -h "$HOME/.$file" ]; then
+        echo "Symlinking $file to home."
+        ln -s "$HOME/.dotfiles/$file" "$HOME/.$file"
+    fi
+done
 echo "...done."
 
 if [ ! -h "$HOME/.fonts/Inconsolata-g.ttf" ]; then
@@ -103,7 +88,7 @@ restart_confirmation () {
 }
 
 # This must be last.
-if [ ! $SHELL = "/bin/zsh" ]; then
+if [ $SHELL != "/bin/zsh" ]; then
     echo "Setting login-shell to zsh."
     chsh -s "/bin/zsh"
     restart_confirmation    

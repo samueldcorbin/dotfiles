@@ -1,0 +1,7 @@
+[user]
+	name = samueldcorbin
+	email = samueldcorbin@gmail.com
+[pull]
+	rebase = preserve
+[merge]
+	ff = false
