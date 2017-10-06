@@ -1,6 +1,17 @@
 #!/bin/bash
 # Bootstraps/updates samueldcorbin's preferred working environment
 
+# Disable screen lock first so we don't get locked out while updating packages
+if [ "$(gsettings get "org.gnome.desktop.screensaver" "lock-enabled")" = "true" ]; then
+    gsettings set "org.gnome.desktop.screensaver" "lock-enabled" "false"
+    echo "Disabled screen lock."
+fi
+
+if [ ! "$(gsettings get "org.gnome.desktop.session" "idle-delay")" = "uint32 900" ]; then
+    gsettings set "org.gnome.desktop.session" "idle-delay" "900"
+    echo "Set to turn screen off when inactive for 15 minutes."
+fi
+
 echo "Updating packages..."
 sudo apt-get -y update
 sudo apt-get -y upgrade
@@ -72,25 +83,16 @@ if [ ! -f "$HOME/.vim/colors/base16-tomorrow-night.vim" ]; then
     ln -s "$HOME/.dotfiles/downloads/base16-tomorrow-night.vim" "$HOME/.vim/colors/base16-tomorrow-night.vim"
     wget -O "$HOME/.dotfiles/downloads/base16-tomorrow-night.sh" "https://raw.githubusercontent.com/chriskempson/base16-shell/master/scripts/base16-tomorrow-night.sh"
     # No easy way to detect if theme is already installed, so just do it at the same time as vim
-    . "$HOME/.dotfiles/gnome_terminal_theme.sh"
+    "$HOME/.dotfiles/gnome_terminal_theme.sh"
     echo "...done."
     echo "Restart terminal to fix colorscheme."
 fi
 
-if [ "$(gsettings get "org.gnome.desktop.screensaver" "lock-enabled")" = "true" ]; then
-    gsettings set "org.gnome.desktop.screensaver" "lock-enabled" "false"
-    echo "Disabled screen lock."
-fi
-
-if [ ! "$(gsettings get "org.gnome.desktop.session" "idle-delay")" = "uint32 900" ]; then
-    gsettings set "org.gnome.desktop.session" "idle-delay" "900"
-    echo "Set to turn screen off when inactive for 15 minutes."
-fi
-
 restart_confirmation () {
     local confirm
-    read -p "Do you want to restart now? [y/n] " confirm
+    read -n 1 -p "Do you want to restart now? [y/n] " confirm
     confirm=$(echo "$confirm" | cut -c 1)
+    echo ""
     if [ "$confirm" = "y" ]; then
         shutdown -r now
     elif [ "$confirm" = "n" ]; then
