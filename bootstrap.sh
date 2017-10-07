@@ -14,6 +14,10 @@ if [ "$(gsettings get "com.canonical.indicator.datetime" "time-format")" != "24-
     gsettings set "com.canonical.indicator.datetime" "time-format" "24-hour"
     echo "Set clock to 24-hour."
 fi
+if [ "$(gsettings get "com.canonical.Unity.Launcher" "favorites")" != "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon']" ]; then
+    gsettings set "com.canonical.Unity.Launcher" "favorites" "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon']"
+    echo "Set Launcher favorites."
+fi
 
 echo "Updating packages..."
 sudo apt-get -y update
