@@ -10,12 +10,16 @@ if [ "$(gsettings get "org.gnome.desktop.session" "idle-delay")" != "uint32 900"
     gsettings set "org.gnome.desktop.session" "idle-delay" "900"
     echo "Set to turn screen off when inactive for 15 minutes."
 fi
-if [ "$(gsettings get "com.canonical.indicator.datetime" "time-format")" != "24-hour" ]; then
+if [ "$(gsettings get "com.canonical.indicator.datetime" "time-format")" != "'24-hour'" ]; then
     gsettings set "com.canonical.indicator.datetime" "time-format" "24-hour"
     echo "Set clock to 24-hour."
 fi
-if [ "$(gsettings get "com.canonical.Unity.Launcher" "favorites")" != "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon']" ]; then
-    gsettings set "com.canonical.Unity.Launcher" "favorites" "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon']"
+if [ "$(gsettings get "com.canonical.Unity.Launcher" "favorites")" != "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']" ]; then
+    gsettings set "com.canonical.Unity.Launcher" "favorites" "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
+    if [ "$(gsettings get "com.canonical.Unity.Devices" "blacklist")" != "['Floppy Disk']" ]; then
+        echo "Floppy disk!"
+        gsettings set "com.canonical.Unity.Devices" "blacklist" "['Floppy Disk']"
+    fi
     echo "Set Launcher favorites."
 fi
 
