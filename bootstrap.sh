@@ -45,9 +45,6 @@ fi
 # Generate gitconfig here so we can get the paths right
 if [ ! -h "$HOME/.gitconfig" ]; then
     echo "Generating gitconfig..."
-    touch "$HOME/.dotfiles/gitconfig"
-    echo "Linking gitconfig to home."
-    ln -s "$HOME/.dotfiles/gitconfig" "$HOME/.gitconfig"
     git config --global user.name "samueldcorbin" 
     git config --global user.email "samueldcorbin@gmail.com"
     git config --global pull.rebase "preserve"
