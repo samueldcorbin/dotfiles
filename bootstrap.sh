@@ -10,6 +10,10 @@ if [ "$(gsettings get "org.gnome.desktop.session" "idle-delay")" != "uint32 900"
     gsettings set "org.gnome.desktop.session" "idle-delay" "900"
     echo "Set to turn screen off when inactive for 15 minutes."
 fi
+if [ "$(gsettings get "com.canonical.indicator.datetime" "time-format")" != "24-hour" ]; then
+    gsettings set "com.canonical.indicator.datetime" "time-format" "24-hour"
+    echo "Set clock to 24-hour."
+fi
 
 echo "Updating packages..."
 sudo apt-get -y update
@@ -30,6 +34,20 @@ if [ ! -f "$HOME/.ssh/id_rsa" ]; then
     echo ""
 fi
 
+# Generate gitconfig here so we can get the paths right
+if [ ! -h "$HOME/.gitconfig" ]; then
+    echo "Generating gitconfig..."
+    touch "$HOME/.dotfiles/gitconfig"
+    echo "Linking gitconfig to home."
+    ln -s "$HOME/.dotfiles/gitconfig" "$HOME/.gitconfig"
+    git config --global user.name "samueldcorbin" 
+    git config --global user.email "samueldcorbin@gmail.com"
+    git config --global pull.rebase "preserve"
+    git config --global merge.ff "false"
+    git config --global core.excludesfile "$HOME/.gitignore_global"
+    echo "...done."
+fi
+
 echo "Updating dotfiles..."
 if [ ! -d "$HOME/.dotfiles" ]; then
     git clone "git@github.com:samueldcorbin/dotfiles.git" "$HOME/.dotfiles"
@@ -42,7 +60,7 @@ else
     git -C "$HOME/.dotfiles" pull
 fi
 
-dotfiles="gitconfig tmux.conf vimrc zshrc"
+dotfiles="gitignore_global tmux.conf vimrc zshrc"
 for file in $dotfiles; do
     if [ ! -h "$HOME/.$file" ]; then
         echo "Symlinking $file to home."
