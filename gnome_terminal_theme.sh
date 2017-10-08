@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Adapted from:
 # Base16 Tomorrow Night - Gnome Terminal color scheme install script
 # Chris Kempson (http://chriskempson.com)
 
@@ -41,50 +42,51 @@ if which "$DCONF" > /dev/null 2>&1; then
 
     [[ -z "$BASE_KEY_NEW" ]] && BASE_KEY_NEW=/org/gnome/terminal/legacy/profiles:
 
-    if [[ -n "`$DCONF list $BASE_KEY_NEW/`" ]]; then
-        if which "$UUIDGEN" > /dev/null 2>&1; then
-            PROFILE_SLUG=`uuidgen`
-        fi
-
-        if [[ -n "`$DCONF read $BASE_KEY_NEW/default`" ]]; then
-            DEFAULT_SLUG=`$DCONF read $BASE_KEY_NEW/default | tr -d \'`
-        else
-            DEFAULT_SLUG=`$DCONF list $BASE_KEY_NEW/ | grep '^:' | head -n1 | tr -d :/`
-        fi
-
-        DEFAULT_KEY="$BASE_KEY_NEW/:$DEFAULT_SLUG"
-        PROFILE_KEY="$BASE_KEY_NEW/:$PROFILE_SLUG"
-
-        # Copy existing settings from default profile
-        $DCONF dump "$DEFAULT_KEY/" | $DCONF load "$PROFILE_KEY/"
-
-        # Add new copy to list of profiles
-        dlist_append $BASE_KEY_NEW/list "$PROFILE_SLUG"
-
-        # Update profile values with theme options
-        dset visible-name "'$PROFILE_NAME'"
-        dset palette "['#1d1f21', '#cc6666', '#b5bd68', '#f0c674', '#81a2be', '#b294bb', '#8abeb7', '#c5c8c6', '#969896', '#cc6666', '#b5bd68', '#f0c674', '#81a2be', '#b294bb', '#8abeb7', '#ffffff']"
-        dset background-color "'#1d1f21'"
-        dset foreground-color "'#c5c8c6'"
-        dset bold-color "'#c5c8c6'"
-        dset bold-color-same-as-fg "true"
-        dset cursor-colors-set "true"
-        dset cursor-background-color "'#c5c8c6'"
-        dset cursor-foreground-color "'#1d1f21'"
-        dset use-theme-colors "false"
-        dset use-theme-background "false"
-
-        # Added by samueldcorbin
-        dset use-theme-transparency "false"
-        dset font "'Inconsolata-g 14'"
-        dset use-system-font "false"
-
-        unset PROFILE_NAME
-        unset PROFILE_SLUG
-        unset DCONF
-        unset UUIDGEN
-        exit 0
+    if [[ -z "`$DCONF list $BASE_KEY_NEW/`" ]]; then
+        $DCONF write $BASE_KEY_NEW/default "$(gsettings get org.gnome.Terminal.ProfilesList default)"
+        $DCONF write $BASE_KEY_NEW/list "$(gsettings get org.gnome.Terminal.ProfilesList list)"
     fi
+
+    if which "$UUIDGEN" > /dev/null 2>&1; then
+        PROFILE_SLUG=`uuidgen`
+    fi
+
+    if [[ -n "`$DCONF read $BASE_KEY_NEW/default`" ]]; then
+        DEFAULT_SLUG=`$DCONF read $BASE_KEY_NEW/default | tr -d \'`
+    else
+        DEFAULT_SLUG=`$DCONF list $BASE_KEY_NEW/ | grep '^:' | head -n1 | tr -d :/`
+    fi
+
+    DEFAULT_KEY="$BASE_KEY_NEW/:$DEFAULT_SLUG"
+    PROFILE_KEY="$BASE_KEY_NEW/:$PROFILE_SLUG"
+
+    # Copy existing settings from default profile
+    $DCONF dump "$DEFAULT_KEY/" | $DCONF load "$PROFILE_KEY/"
+
+    # Add new copy to list of profiles
+    dlist_append $BASE_KEY_NEW/list "$PROFILE_SLUG"
+
+    # Update profile values with theme options
+    dset visible-name "'$PROFILE_NAME'"
+    dset palette "['#1d1f21', '#cc6666', '#b5bd68', '#f0c674', '#81a2be', '#b294bb', '#8abeb7', '#c5c8c6', '#969896', '#cc6666', '#b5bd68', '#f0c674', '#81a2be', '#b294bb', '#8abeb7', '#ffffff']"
+    dset background-color "'#1d1f21'"
+    dset foreground-color "'#c5c8c6'"
+    dset bold-color "'#c5c8c6'"
+    dset bold-color-same-as-fg "true"
+    dset cursor-colors-set "true"
+    dset cursor-background-color "'#c5c8c6'"
+    dset cursor-foreground-color "'#1d1f21'"
+    dset use-theme-colors "false"
+    dset use-theme-background "false"
+    dset use-theme-transparency "false"
+    dset font "'Inconsolata-g 14'"
+    dset use-system-font "false"
+
+    unset PROFILE_NAME
+    unset PROFILE_SLUG
+    unset DCONF
+    unset UUIDGEN
+    exit 0
 fi
 
 # Fallback for Gnome 2 and early Gnome 3
