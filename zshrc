@@ -15,4 +15,3 @@ compinit
 . "$HOME/.dotfiles/downloads/base16-tomorrow-night.sh"
 
 export EDITOR=vim
-export VISUAL=vim
