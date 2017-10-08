@@ -50,6 +50,11 @@ if [ ! -h "$HOME/.gitconfig" ]; then
     git config --global pull.rebase "preserve"
     git config --global merge.ff "false"
     git config --global core.excludesfile "$HOME/.gitignore_global"
+    git config --global format.pretty "short"
+    git config --global log.abbrevCommit "true"
+    git config --global log.decorate "auto"
+    git config --global status.short "true"
+    git config --global status.branch "true"
     echo "...done."
 fi
 
