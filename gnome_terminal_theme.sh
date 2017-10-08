@@ -2,11 +2,10 @@
 
 # Base16 Tomorrow Night - Gnome Terminal color scheme install script
 # Chris Kempson (http://chriskempson.com)
-# Modified by samueldcorbin
 
 [[ -z "$PROFILE_NAME" ]] && PROFILE_NAME="Base 16 Tomorrow Night 256"
 [[ -z "$PROFILE_SLUG" ]] && PROFILE_SLUG="base-16-tomorrow-night-256"
-[[ -z "$GSETTINGS" ]] && GSETTINGS=gsettings
+[[ -z "$DCONF" ]] && DCONF=dconf
 [[ -z "$UUIDGEN" ]] && UUIDGEN=uuidgen
 
 dset() {
@@ -35,20 +34,20 @@ dlist_append() {
     "$DCONF" write "$key" "[$entries]"
 }
 
-# Newest versions of gnome-terminal use gsettings
-if which "$GSETTINGS" > /dev/null 2>&1; then
+# Newest versions of gnome-terminal use dconf
+if which "$DCONF" > /dev/null 2>&1; then
     # Check that uuidgen is available
     type $UUIDGEN >/dev/null 2>&1 || { echo >&2 "Requires uuidgen but it's not installed.  Aborting!"; exit 1; }
 
-    [[ -z "$BASE_KEY_NEW" ]] && BASE_KEY_NEW=org.gnome.Terminal.ProfilesList
+    [[ -z "$BASE_KEY_NEW" ]] && BASE_KEY_NEW=/org/gnome/terminal/legacy/profiles:
 
-    if [[ -n "`$GSETTINGS list-children $BASE_KEY_NEW`" ]]; then
+    if [[ -n "`$DCONF list $BASE_KEY_NEW/`" ]]; then
         if which "$UUIDGEN" > /dev/null 2>&1; then
             PROFILE_SLUG=`uuidgen`
         fi
 
-        if [[ -n "`$GSETTINGS get $BASE_KEY_NEW default`" ]]; then
-            DEFAULT_SLUG=`$GSETTINGS get $BASE_KEY_NEW default | tr -d \'`
+        if [[ -n "`$DCONF read $BASE_KEY_NEW/default`" ]]; then
+            DEFAULT_SLUG=`$DCONF read $BASE_KEY_NEW/default | tr -d \'`
         else
             DEFAULT_SLUG=`$DCONF list $BASE_KEY_NEW/ | grep '^:' | head -n1 | tr -d :/`
         fi
