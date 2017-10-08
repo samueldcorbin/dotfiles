@@ -43,7 +43,7 @@ if which "$DCONF" > /dev/null 2>&1; then
     [[ -z "$BASE_KEY_NEW" ]] && BASE_KEY_NEW=/org/gnome/terminal/legacy/profiles:
 
     if [[ -z "`$DCONF list $BASE_KEY_NEW/`" ]]; then
-        DEFAULT_SLUG= `gsettings get org.gnome.Terminal.ProfilesList default | tr -d \'`
+        DEFAULT_SLUG=`gsettings get org.gnome.Terminal.ProfilesList default | tr -d \'`
     else
         if [[ -n "`$DCONF read $BASE_KEY_NEW/default`" ]]; then
             DEFAULT_SLUG=`$DCONF read $BASE_KEY_NEW/default | tr -d \'`
