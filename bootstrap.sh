@@ -25,7 +25,7 @@ fi
 
 echo "Updating packages..."
 sudo apt-get -y update
-sudo apt-get -y upgrade
+sudo apt-get -y dist-upgrade
 sudo apt-get -y install zsh tmux vim git unzip wget
 sudo apt-get -y autoremove
 sudo apt-get -y autoclean
@@ -36,7 +36,7 @@ if [ ! -f "$HOME/.ssh/id_rsa" ]; then
     ssh-keygen -f "$HOME/.ssh/id_rsa"
     echo "Public key:"
     cat "$HOME/.ssh/id_rsa.pub"
-    echo "GitHub: https://github.com/settings/keys"
+    echo "GitHub:    https://github.com/settings/keys"
     echo "Bitbucket: https://bitbucket.org/account/user/samueldcorbin/ssh-keys/"
     read -n 1 -p "Add key to GitHub/Bitbucket, then press any key to continue. "
     echo ""

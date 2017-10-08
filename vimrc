@@ -6,6 +6,9 @@ syntax enable
 let base16colorspace=256
 colorscheme base16-tomorrow-night
 
+" No bells: visual bell is disabled in zshrc
+set visualbell
+
 set autoindent
 set smartindent
 set backspace=indent,eol,start
