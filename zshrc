@@ -13,3 +13,6 @@ compinit
 
 # Use Base16 Shell colors
 . "$HOME/.dotfiles/downloads/base16-tomorrow-night.sh"
+
+export EDITOR=vim
+export VISUAL=vim
