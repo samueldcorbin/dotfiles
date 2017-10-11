@@ -15,4 +15,6 @@ compinit
 
 export EDITOR=vim
 
-source "$HOME/.dotfiles/zshrc_local"
+if [ -f "$HOME/.dotfiles/zshrc_local" ]; then
+    source "$HOME/.dotfiles/zshrc_local"
+fi
