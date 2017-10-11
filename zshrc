@@ -6,7 +6,6 @@ HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 unsetopt beep
-bindkey -v
 
 autoload -Uz compinit
 compinit
@@ -15,3 +14,5 @@ compinit
 . "$HOME/.dotfiles/downloads/base16-tomorrow-night.sh"
 
 export EDITOR=vim
+
+source "$HOME/.dotfiles/zshrc_local"
