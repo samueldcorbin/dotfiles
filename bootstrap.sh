@@ -58,6 +58,7 @@ if [ ! -h "$HOME/.gitconfig" ]; then
     git config --global merge.tool "vimdiff"
     git config --global mergetool.keepBackup "false"
     git config --global merge.conflictStyle "diff3"
+    git config --global push.default "simple"
 
     echo "...done."
 fi
