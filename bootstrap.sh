@@ -59,6 +59,7 @@ if [ ! -h "$HOME/.gitconfig" ]; then
     git config --global mergetool.keepBackup "false"
     git config --global merge.conflictStyle "diff3"
     git config --global push.default "simple"
+    git config --global core.autocrlf "input"
 
     echo "...done."
 fi
