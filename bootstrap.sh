@@ -25,14 +25,12 @@ fi
 
 echo "Updating packages..."
 sudo apt-get -y update
-sudo apt-get -y dist-upgrade
 sudo apt-get -y install zsh tmux vim git unzip wget
-sudo apt-get -y autoremove
-sudo apt-get -y autoclean
 echo "...done."
 
 if [ ! -f "$HOME/.ssh/id_rsa" ]; then
     echo "No default SSH key found, generating new default:"
+    mkdir -m 700 -p "$HOME/.ssh"
     ssh-keygen -f "$HOME/.ssh/id_rsa"
     echo "Public key:"
     cat "$HOME/.ssh/id_rsa.pub"
