@@ -17,7 +17,7 @@ bindkey -v
 bindkey -v '^?' backward-delete-char
 bindkey -v '^h' backward-delete-char
 # Decrease delay on switch to Normal mode
-export KEYTIMEOUT=1
+export KEYTIMEOUT=10
 
 # Autocomplete
 # Smartcase
@@ -27,3 +27,16 @@ compinit
 
 # Set default editor
 export EDITOR=vim
+
+# vi-mode cursors
+zle-line-init() {
+    echo -ne "\e[5 q"
+}
+zle-keymap-select() {
+    if [[ $KEYMAP == "vicmd" ]]; then
+        echo -ne "\e[2 q"
+    else
+        echo -ne "\e[5 q"
+    fi
+}
+zle -N zle-keymap-select
