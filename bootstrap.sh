@@ -1,28 +1,6 @@
 #!/bin/bash
 # Bootstraps/updates samueldcorbin's preferred working environment
 
-# Disable screen lock first so we don't get locked out while updating packages
-if [ "$(gsettings get "org.gnome.desktop.screensaver" "lock-enabled")" = "true" ]; then
-    gsettings set "org.gnome.desktop.screensaver" "lock-enabled" "false"
-    echo "Disabled screen lock."
-fi
-if [ "$(gsettings get "org.gnome.desktop.session" "idle-delay")" != "uint32 900" ]; then
-    gsettings set "org.gnome.desktop.session" "idle-delay" "900"
-    echo "Set to turn screen off when inactive for 15 minutes."
-fi
-if [ "$(gsettings get "com.canonical.indicator.datetime" "time-format")" != "'24-hour'" ]; then
-    gsettings set "com.canonical.indicator.datetime" "time-format" "24-hour"
-    echo "Set clock to 24-hour."
-fi
-if [ "$(gsettings get "com.canonical.Unity.Launcher" "favorites")" != "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']" ]; then
-    gsettings set "com.canonical.Unity.Launcher" "favorites" "['application://gnome-terminal.desktop', 'application://ubiquity.desktop', 'application://org.gnome.Nautilus.desktop', 'application://firefox.desktop', 'application://unity-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']"
-    if [ "$(gsettings get "com.canonical.Unity.Devices" "blacklist")" != "['Floppy Disk']" ]; then
-        echo "Floppy disk!"
-        gsettings set "com.canonical.Unity.Devices" "blacklist" "['Floppy Disk']"
-    fi
-    echo "Set Launcher favorites."
-fi
-
 echo "Updating packages..."
 sudo apt-get -y update
 sudo apt-get -y install zsh tmux vim git unzip wget
@@ -94,36 +72,17 @@ if [ ! -h "$HOME/.fonts/Inconsolata-g.ttf" ]; then
 fi
 
 if [ ! -f "$HOME/.vim/colors/base16-tomorrow-night.vim" ]; then
-    echo "Adding base16-tomorrow-night colorscheme."
+    echo "Adding base16-tomorrow-night vim colorscheme."
     wget -O "$HOME/.dotfiles/downloads/base16-tomorrow-night.vim" "https://raw.githubusercontent.com/chriskempson/base16-vim/master/colors/base16-tomorrow-night.vim"
     mkdir -p "$HOME/.vim/colors"
     ln -s "$HOME/.dotfiles/downloads/base16-tomorrow-night.vim" "$HOME/.vim/colors/base16-tomorrow-night.vim"
-    wget -O "$HOME/.dotfiles/downloads/base16-tomorrow-night.sh" "https://raw.githubusercontent.com/chriskempson/base16-shell/master/scripts/base16-tomorrow-night.sh"
-    # No easy way to detect if theme is already installed, so just do it at the same time as vim
-    "$HOME/.dotfiles/gnome_terminal_theme.sh"
     echo "...done."
-    echo "Restart terminal to fix colorscheme."
 fi
 
-restart_confirmation () {
-    local confirm
-    read -n 1 -p "Do you want to restart now? [y/n] " confirm
-    confirm=$(echo "$confirm" | cut -c 1)
-    echo ""
-    if [ "$confirm" = "y" ]; then
-        shutdown -r now
-    elif [ "$confirm" = "n" ]; then
-        true
-    else
-        restart_confirmation
-    fi
-}
-
-# This must be last.
 if [ $SHELL != "/bin/zsh" ]; then
-    echo "Setting login-shell to zsh."
+    echo "Setting shell to zsh."
     chsh -s "/bin/zsh"
-    restart_confirmation    
+    echo "Restart to change shell."
 fi
 
-echo "Done."
+echo "All done."
