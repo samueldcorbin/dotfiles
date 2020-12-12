@@ -22,7 +22,7 @@ if [ ! -h "$HOME/.gitconfig" ]; then
     echo "Generating gitconfig..."
     git config --global user.name "samueldcorbin" 
     git config --global user.email "samueldcorbin@gmail.com"
-    git config --global pull.rebase "preserve"
+    git config --global pull.rebase "merges"
     git config --global merge.ff "false"
     git config --global core.excludesfile "$HOME/.gitignore_global"
     git config --global format.pretty "short"
